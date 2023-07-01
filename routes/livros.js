@@ -71,5 +71,17 @@ router.delete("/:id",async(req,res) => {
     }
 });
 
+//Filtro por titulo ou por autor
+router.get("/filtro/:palavra", async(req,res)=> {
+    const palavra = req.params.palavra; // palavra ou titulo a pesquisar
+    try{
+            const livros = await dbKnex("livros")
+            .where("titulo","like", `%${palavra}%`)
+            .orWhere("autor","like",`%${palavra}%`);
+            res.status(200).json(livros); //retorna statusCode ok e os dados
+        }catch(error){
+            res.status(400).json({msg:error.message}); //retorna status de erro e msg
+        }
+});
 
 module.exports = router;
